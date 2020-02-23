@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- {% load static %}
+ -->
+
+
+
+    <script src = "{% static 'jquery-1.11.3.min.js' %}"></script>
+    <!-- <script src= "{% static 'canvas.js' %}"></script>    -->
+    <link rel="stylesheet" href="{% static 'canvasStyle.css' %}?v=5"/>
+
+
+
+
+<h1> This is the canvas page </h1>
+
+
+
+        <div class="grid">
+<!-- 
+            <tr class="Row1">
+               <td> <div class="canvas" id="1-1"></div> </td>
+                <td><div class="canvas" id="1-2"></div></td>
+               <td> <div class="canvas" id="1-3"></div></td>
+            </tr>
+
+            <tr class="Row2">
+                <td><div class="canvas" id="2-1"></div></td>
+               <td> <div class="canvas" id="2-2"></div></td>
+               <td> <div class="canvas" id="2-3"></div></td>
+            </tr>
+
+            <tr class="Row3">
+               <td> <div class="canvas" id="3-1"></div></td>
+               <td> <div class="canvas" id="3-2"></div></td>
+               <td> <div class="canvas" id="3-3"></div></td>
+            </tr> -->
+        </div>
+    <script src= "{% static 'canvas.js' %}"></script>   
+
+<script> 
+
+// {% for pixel in drawing %}
+//     $('#{{pixel.xcoord}}-{{pixel.ycoord}}').css('background-color', '{{pixel.color}}');
+//         console.log('{{pixel.xcoord}}'+ ' ' + '{{pixel.ycoord}}'+ ' ' + '{{pixel.color}}')
+// {% endfor %}
+//     console.log('{{ csrf_token }}')
+
+
+
+// makeGrid(60)
+// {% for pixel in drawing %}
+//     $('#{{pixel.xcoord}}-{{pixel.ycoord}}').css('background-color', '{{pixel.color}}');
+//         console.log('{{pixel.xcoord}}'+ ' ' + '{{pixel.ycoord}}'+ ' ' + '{{pixel.color}}')
+// {% endfor %}
+
+
+function draw (xcoord, ycoord, color, div) {
+    console.log("in draw")
+    console.log({'xcoord': xcoord, 'ycoord' : ycoord, 'color' : color, csrfmiddlewaretoken: getCookie('csrftoken')})
+    $.ajax({
+            url: '/grid/',
+            type: 'post',
+            data: {'xcoord': xcoord, 'ycoord' : ycoord, 'color' : color, csrfmiddlewaretoken: '{{ csrf_token }}'},
+            success: function() {
+                $(div).css("background-color",color);
+            }
+        })
+}
+
+function makeGrid(n) {
+    for (var x=0; x<n; x++) {
+        tr = $('<div class="Row"></div>');
+        for (var y=0; y<n; y++) {
+            tr.append('<span class="canvas" ondragover="draw(' + (x + 1) + ',' + (y + 1) + ',\'' + color + '\',this)" id="' + (x + 1) + "-" + (y + 1) +'"></span>');
+        }
+        $('.grid').append(tr)
+    }
+}
+
+    $(document).ready(function() {
+        makeGrid(60)
+{% for pixel in drawing %}
+    $('#{{pixel.xcoord}}-{{pixel.ycoord}}').css('background-color', '{{pixel.color}}');
+        console.log('{{pixel.xcoord}}'+ ' ' + '{{pixel.ycoord}}'+ ' ' + '{{pixel.color}}')
+{% endfor %}
+
+    $(".canvas").mouseup(function() {
+        var x = this.id.split('-')[0];
+        var y = this.id.split('-')[1];
+        draw(x, y, window.color, this);
+    });
+    $("body").on("click", ".canvas",function() {
+    console.log("clicked")
+    });
+    // $(".canvas").on("dragenter",function() {
+    //     console.log("drag enter")
+    //     var x = this.id.split('-')[0];
+    //     var y = this.id.split('-')[1];
+    //     draw(x, y, window.color, this);
+    // });
+    // $(".canvas").on("dragleave",function() {
+    //     console.log("drag leave")
+    //     var x = this.id.split('-')[0];
+    //     var y = this.id.split('-')[1];
+    //     draw(x, y, window.color, this);
+    // });
+})
+
+</script>
+
+
+
+
+
+
+
+

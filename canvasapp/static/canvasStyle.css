@@ -1,0 +1,26 @@
+
+
+h1 {
+    color: blue;
+}
+
+.grid {
+    display: inline-grid;
+}
+
+
+.Row {
+    display: inline-flex;
+/*   height: 2px;
+    width: 100px;
+    border: solid gray;
+*/}
+
+
+.canvas {
+    display: grid;
+    height: 2px;
+    width: 2px;
+/*    border: solid thin lightgrey;*/
+}
+

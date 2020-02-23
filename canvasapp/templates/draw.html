@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% load static %}
+
+
+
+
+    <script src = "{% static 'jquery-1.11.3.min.js' %}"></script>
+    <!-- <script src= "{% static 'canvas.js' %}"></script>    -->
+    <link rel="stylesheet" href="{% static 'canvasStyle.css' %}?v=5"/>
+
+
+
+
+        <div class="grid">
+
+           <!--  <tr class="Row1">
+               <td> <div class="canvas" id="1-1"></div> </td>
+                <td><div class="canvas" id="1-2"></div></td>
+               <td> <div class="canvas" id="1-3"></div></td>
+            </tr>
+
+            <tr class="Row2">
+                <td><div class="canvas" id="2-1"></div></td>
+               <td> <div class="canvas" id="2-2"></div></td>
+               <td> <div class="canvas" id="2-3"></div></td>
+            </tr>
+
+            <tr class="Row3">
+               <td> <div class="canvas" id="3-1"></div></td>
+               <td> <div class="canvas" id="3-2"></div></td>
+               <td> <div class="canvas" id="3-3"></div></td>
+            </tr> -->
+        </div>
+
+
+<script>
+    function makeGrid(n) {
+    for (var x=0; x<n; x++) {
+        tr = $('<div class="Row"></div>');
+        for (var y=0; y<n; y++) {
+            tr.append('<span class="canvas" id="' + (x + 1) + "-" + (y + 1) +'"></span>');
+        }
+        $('.grid').append(tr)
+    }
+}
+makeGrid(60)
+{% for pixel in drawing %}
+    $('#{{pixel.xcoord}}-{{pixel.ycoord}}').css('background-color', '{{pixel.color}}');
+{% endfor %}
+    setInterval(function() {
+        console.log("in set interval")
+    $.ajax({
+        url: '/update/',
+        type: 'get',
+        data: {},
+        success: function(data) {
+            var list = data.update; 
+            for (var i = 0; i < list.length; i++) {
+                xcoord = list[i].xcoord
+                ycoord = list[i].ycoord
+                color = list[i].color
+                $('#' + xcoord + '-' + ycoord).css('background-color', color);
+            }
+
+        }
+    })
+}, 5000);
+</script>
